@@ -25,7 +25,10 @@
 
 __all__ = ['get_stations_full', 'get_stations_lite', 'get_hourly_full_station'
 , 'get_hourly_obs_station', 'get_daily_full_station', 'get_daily_obs_station'
-,'get_monthly_full_station', 'get_monthly_obs_station', 'get_normals_station']
+,'get_monthly_full_station', 'get_monthly_obs_station', 'get_normals_station'
+, 'get_hourly_full_all_stations', 'get_hourly_obs_all_stations', 'get_daily_full_all_stations'
+, 'get_daily_obs_all_stations', 'get_monthly_full_all_stations', 'get_monthly_obs_all_stations'
+, 'get_normals_all_stations']
 
 import os
 import csv
@@ -34,9 +37,9 @@ import gzip
 
 import requests
 from requests.exceptions import HTTPError
-from requests.models import Response
 
 ENDPOINT = '//bulk.meteostat.net/v2/'
+
 HOURLY_CSV_DATA_HEADER = ('date', 'hour', 'temp', 'dwpt', 'rhum', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'coco')
 DAILY_CSV_DATA_HEADER = ('date', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
 MONTHLY_CSV_DATA_HEADER = ('year', 'month', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
@@ -451,4 +454,4 @@ def get_normals_all_stations(format:str = 'csv',**kwargs) -> str:
         data.append(query)
     
     return data
-    
+
