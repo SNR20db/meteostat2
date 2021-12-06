@@ -10,7 +10,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as file:
     long_description=file.read()
 
 for line in open(path.join('','__init__.py')):
-    if line.startswith('__versions__'):
+    if line.startswith('__version__'):
         exec(line)
         break
 
@@ -30,12 +30,12 @@ setup(
     ],
     keywords='meteo meteostat weather weatherAPI meteorology',
     install_requires=['requests'],
-    entry_points={
-        'console_scripts':[
-            'meteostat=meteostat.__main__:main',
-            'meteo=meteostat.__main__:main'
-        ]
-    },
+#    entry_points={
+#        'console_scripts':[
+#            'meteostat=meteostat.__main__:main',
+#            'meteo=meteostat.__main__:main'
+#        ]
+#    },
     py_modules=['meteostat.meteostat','meteostat.__main__'],
     test_require=[
         'pytest'

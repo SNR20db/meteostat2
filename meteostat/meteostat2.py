@@ -23,7 +23,9 @@
 
 """Meteostat API client for Python"""
 
-__all__ = ['get_stations_full', 'get_stations_lite', 'get_hourly_full_station', 'options']
+__all__ = ['get_stations_full', 'get_stations_lite', 'get_hourly_full_station'
+, 'get_hourly_obs_station', 'get_daily_full_station', 'get_daily_obs_station'
+,'get_monthly_full_station', 'get_monthly_obs_station', 'get_normals_station']
 
 import os
 import gzip
