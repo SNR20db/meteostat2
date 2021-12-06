@@ -269,7 +269,3 @@ def get_normals_station(station:str = '47423',**kwargs) -> str:
     res = gzip.decompress(response.content)
 
     return res
-
-response = get_hourly_obs_station()
-
-print(response)

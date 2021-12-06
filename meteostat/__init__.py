@@ -23,6 +23,6 @@
 
 """Meteostat API client for Python"""
 
-from meteostat.meteostat import *
+from meteostat.meteostat2 import *
 
 __version__="0.0.1"
