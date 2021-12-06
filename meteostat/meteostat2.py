@@ -28,7 +28,7 @@ __all__ = ['get_stations_full', 'get_stations_lite', 'get_hourly_full_station'
 ,'get_monthly_full_station', 'get_monthly_obs_station', 'get_normals_station'
 , 'get_hourly_full_all_stations', 'get_hourly_obs_all_stations', 'get_daily_full_all_stations'
 , 'get_daily_obs_all_stations', 'get_monthly_full_all_stations', 'get_monthly_obs_all_stations'
-, 'get_normals_all_stations']
+, 'get_normals_all_stations', 'get_nearby_stations']
 
 import os
 import csv
@@ -455,3 +455,27 @@ def get_normals_all_stations(format:str = 'csv',**kwargs) -> str:
     
     return data
 
+def get_nearby_stations(x_rapidapi_key:str = None, lat:float = None, lon:float = None, limit:int = 10, radius:int = 100000,**kwargs) -> str:
+    """retrieves nearby stations by geolocation.
+    See: 
+    
+    https://dev.meteostat.net/api/stations/nearby.html
+    
+    for details"""
+    
+    url = 'https://meteostat.p.rapidapi.com/stations/nearby'
+
+    querystring = {
+        "lat" : lat,
+        "lon" : lon,
+        "limit" : limit,
+        "radius" : radius} #{"lat":"51.5085","lon":"-0.1257"}
+
+    headers = {
+        'x-rapidapi-host': "meteostat.p.rapidapi.com",
+        'x-rapidapi-key':  x_rapidapi_key#"d351b58670mshcce819d6a8a3034p1c54bdjsn88f7a12fa377"        
+    }
+
+    response = requests.get(url = url, headers = headers, params = querystring)
+
+    return json.loads(response.text)
