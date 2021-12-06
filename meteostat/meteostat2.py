@@ -34,6 +34,7 @@ import gzip
 
 import requests
 from requests.exceptions import HTTPError
+from requests.models import Response
 
 ENDPOINT = '//bulk.meteostat.net/v2/'
 HOURLY_CSV_DATA_HEADER = ('date', 'hour', 'temp', 'dwpt', 'rhum', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'coco')
@@ -92,7 +93,7 @@ def _get_data_from_endpoint(url:str = None, **kwargs) -> str:
         (response.status_code, response.reason, response.text)
         )
 
-        quit()
+        pass
     else:
         return gzip.decompress(response.content)
 
@@ -159,6 +160,8 @@ def get_hourly_full_station(station:str = '47423', format:str = 'csv', **kwargs)
 
     if format == 'json':
         result = _get_json_from_csv(data=response, fieldnames=HOURLY_CSV_DATA_HEADER)
+
+        return result
     else:
         return response
 
@@ -267,7 +270,7 @@ def get_monthly_obs_station(station:str = '47423',**kwargs) -> str:
 
     return response
 
-def get_normals_station(station:str = '47423',**kwargs) -> str:
+def get_normals_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
     """retrieves station normals information. 
     See: 
     
@@ -288,7 +291,164 @@ def get_normals_station(station:str = '47423',**kwargs) -> str:
 
     return response
 
+def get_hourly_full_all_stations(format:str = 'csv',**kwargs) -> str:
+    """retrieves station hourly full information for all stations
+    listed in get_stations_full().
+    See: 
+    
+    https://dev.meteostat.net/bulk/hourly.html#endpoints
+    
+    for details"""
+    stations = []
+    data = []
 
-response = get_hourly_full_station(station='47423', format='json')
+    response = get_stations_full()
 
-print(response)
+    for line in response:
+        stations.append(line['id'])
+
+    for id in stations:
+        query = get_hourly_full_station(station = id, format = format)
+
+        data.append(query)
+    
+    return data
+
+def get_hourly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
+    """retrieves station hourly observation information for all stations
+    listed in get_stations_full().
+    See: 
+    
+    https://dev.meteostat.net/bulk/hourly.html#endpoints
+    
+    for details"""
+    stations = []
+    data = []
+
+    response = get_stations_full()
+
+    for line in response:
+        stations.append(line['id'])
+
+    for id in stations:
+        query = get_hourly_obs_station(station = id, format = format)
+
+        data.append(query)
+    
+    return data
+
+def get_daily_full_all_stations(format:str = 'csv',**kwargs) -> str:
+    """retrieves station daily full information for all stations
+    listed in get_stations_full().
+    See: 
+    
+    https://dev.meteostat.net/bulk/hourly.html#endpoints
+    
+    for details"""
+    stations = []
+    data = []
+
+    response = get_stations_full()
+
+    for line in response:
+        stations.append(line['id'])
+
+    for id in stations:
+        query = get_daily_full_station(station = id, format = format)
+
+        data.append(query)
+    
+    return data
+
+def get_daily_obs_all_stations(format:str = 'csv',**kwargs) -> str:
+    """retrieves station daily obs information for all stations
+    listed in get_stations_full().
+    See: 
+    
+    https://dev.meteostat.net/bulk/hourly.html#endpoints
+    
+    for details"""
+    stations = []
+    data = []
+
+    response = get_stations_full()
+
+    for line in response:
+        stations.append(line['id'])
+
+    for id in stations:
+        query = get_daily_obs_station(station = id, format = format)
+
+        data.append(query)
+    
+    return data   
+
+def get_monthly_full_all_stations(format:str = 'csv',**kwargs) -> str:
+    """retrieves station monthly full information for all stations
+    listed in get_stations_full().
+    See: 
+    
+    https://dev.meteostat.net/bulk/hourly.html#endpoints
+    
+    for details"""
+    stations = []
+    data = []
+
+    response = get_stations_full()
+
+    for line in response:
+        stations.append(line['id'])
+
+    for id in stations:
+        query = get_monthly_full_station(station = id, format = format)
+
+        data.append(query)
+    
+    return data      
+
+def get_monthly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
+    """retrieves station daily observation information for all stations
+    listed in get_stations_full().
+    See: 
+    
+    https://dev.meteostat.net/bulk/hourly.html#endpoints
+    
+    for details"""
+    stations = []
+    data = []
+
+    response = get_stations_full()
+
+    for line in response:
+        stations.append(line['id'])
+
+    for id in stations:
+        query = get_monthly_obs_station(station = id, format = format)
+
+        data.append(query)
+    
+    return data     
+
+def get_normals_all_stations(format:str = 'csv',**kwargs) -> str:
+    """retrieves station normals information for all stations
+    listed in get_stations_full().
+    See: 
+    
+    https://dev.meteostat.net/bulk/hourly.html#endpoints
+    
+    for details"""
+    stations = []
+    data = []
+
+    response = get_stations_full()
+
+    for line in response:
+        stations.append(line['id'])
+
+    for id in stations:
+        query = get_normals_station(station = id, format = format)
+
+        data.append(query)
+    
+    return data
+    
