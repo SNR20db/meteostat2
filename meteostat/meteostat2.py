@@ -32,6 +32,7 @@ import gzip
 import json
 
 import requests
+from requests.exceptions import HTTPError
 
 ENDPOINT = '//bulk.meteostat.net/v2/'
 
@@ -75,6 +76,21 @@ def _get_endpoint_url() -> str:
 
     return "{http}{endpoint}".format(**components)
 
+def _get_data_from_endpoint(url:str = None, **kwargs) -> str:
+    """Gets data from the stablished endpoint."""
+    try:
+        response = requests.get(url)
+
+        response.raise_for_status()
+    except HTTPError as http_err:
+        print('Invalid request. Code: {}, reason: {}, text: {}'.format
+        (response.status_code, response.reason, response.text)
+        )
+
+        quit()
+    else:
+        return gzip.decompress(response.content)
+
 def get_stations_full(**kwargs) -> json:
     """retrieves station full information."""
     endpoint = _get_endpoint_url()
@@ -85,11 +101,9 @@ def get_stations_full(**kwargs) -> json:
 
     url = "{}{action}".format(endpoint, **components)
 
-    response = requests.get(url)
+    response = _get_data_from_endpoint(url = url)
 
-    res = gzip.decompress(response.content)
-
-    return json.loads(res)
+    return json.loads(response)
 
 def get_stations_lite(**kwargs) -> json:
     """retrieves station lite information. See: 
@@ -105,11 +119,9 @@ def get_stations_lite(**kwargs) -> json:
 
     url = "{}{action}".format(endpoint, **components)
 
-    response = requests.get(url)
+    response = _get_data_from_endpoint(url = url)
 
-    res = gzip.decompress(response.content)
-
-    return json.loads(res)    
+    return json.loads(response)    
 
 def get_hourly_full_station(station:str = '47423',**kwargs) -> str:
     """retrieves station hourly full information. 
@@ -128,11 +140,9 @@ def get_hourly_full_station(station:str = '47423',**kwargs) -> str:
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = requests.get(url)
+    response = _get_data_from_endpoint(url = url)
 
-    res = gzip.decompress(response.content)
-
-    return res
+    return response
 
 def get_hourly_obs_station(station:str = '47423',**kwargs) -> str:
     """retrieves station hourly observation information. 
@@ -151,11 +161,9 @@ def get_hourly_obs_station(station:str = '47423',**kwargs) -> str:
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = requests.get(url)
+    response = _get_data_from_endpoint(url = url)
 
-    res = gzip.decompress(response.content)
-
-    return res
+    return response
 
 def get_daily_full_station(station:str = '47423',**kwargs) -> str:
     """retrieves station daily full information. 
@@ -174,11 +182,9 @@ def get_daily_full_station(station:str = '47423',**kwargs) -> str:
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = requests.get(url)
+    response = _get_data_from_endpoint(url = url)
 
-    res = gzip.decompress(response.content)
-
-    return res
+    return response
 
 def get_daily_obs_station(station:str = '47423',**kwargs) -> str:
     """retrieves station daily observation information. 
@@ -197,11 +203,9 @@ def get_daily_obs_station(station:str = '47423',**kwargs) -> str:
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = requests.get(url)
+    response = _get_data_from_endpoint(url = url)
 
-    res = gzip.decompress(response.content)
-
-    return res
+    return response
 
 def get_monthly_full_station(station:str = '47423',**kwargs) -> str:
     """retrieves station monthly full information. 
@@ -220,11 +224,9 @@ def get_monthly_full_station(station:str = '47423',**kwargs) -> str:
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = requests.get(url)
+    response = _get_data_from_endpoint(url = url)
 
-    res = gzip.decompress(response.content)
-
-    return res
+    return response
 
 def get_monthly_obs_station(station:str = '47423',**kwargs) -> str:
     """retrieves station monthly obs information. 
@@ -243,11 +245,9 @@ def get_monthly_obs_station(station:str = '47423',**kwargs) -> str:
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = requests.get(url)
+    response = _get_data_from_endpoint(url = url)
 
-    res = gzip.decompress(response.content)
-
-    return res
+    return response
 
 def get_normals_station(station:str = '47423',**kwargs) -> str:
     """retrieves station normals information. 
@@ -266,8 +266,11 @@ def get_normals_station(station:str = '47423',**kwargs) -> str:
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = requests.get(url)
+    response = _get_data_from_endpoint(url = url)
 
-    res = gzip.decompress(response.content)
+    return response
 
-    return res
+
+response = get_hourly_full_station()
+
+print(response)
