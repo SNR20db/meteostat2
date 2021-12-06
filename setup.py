@@ -22,7 +22,7 @@ setup(
     url='https://dev.meteostat.net/',
     license='MIT',
     Classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: MIT License',
         'Programming Language :: Python :: 3.8',
@@ -36,7 +36,7 @@ setup(
 #            'meteo=meteostat.__main__:main'
 #        ]
 #    },
-    py_modules=['meteostat.meteostat','meteostat.__main__'],
+    py_modules=['meteostat.meteostat2','meteostat.__main__'],
     test_require=[
         'pytest'
     ]
