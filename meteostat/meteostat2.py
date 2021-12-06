@@ -28,13 +28,18 @@ __all__ = ['get_stations_full', 'get_stations_lite', 'get_hourly_full_station'
 ,'get_monthly_full_station', 'get_monthly_obs_station', 'get_normals_station']
 
 import os
-import gzip
+import csv
 import json
+import gzip
 
 import requests
 from requests.exceptions import HTTPError
 
 ENDPOINT = '//bulk.meteostat.net/v2/'
+HOURLY_CSV_DATA_HEADER = ('date', 'hour', 'temp', 'dwpt', 'rhum', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'coco')
+DAILY_CSV_DATA_HEADER = ('date', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
+MONTHLY_CSV_DATA_HEADER = ('year', 'month', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
+NORMALS_CSV_DATA_HEADER = ('star', 'end', 'month', 'tmin', 'tmax', 'prcp', 'wspd', 'pres', 'tsun')
 
 class OptionsManager(object):
     """Class for option managment"""
@@ -91,6 +96,16 @@ def _get_data_from_endpoint(url:str = None, **kwargs) -> str:
     else:
         return gzip.decompress(response.content)
 
+def _get_json_from_csv(data:str = None, fieldnames:tuple = None, **kwargs) -> json:
+    """Parses data from csv to json dict."""
+    
+    result = csv.DictReader(data.decode('utf-8'), fieldnames=fieldnames, restkey='Excess', restval=None)
+
+    for row in result:
+        print(row)
+
+    return result
+
 def get_stations_full(**kwargs) -> json:
     """retrieves station full information."""
     endpoint = _get_endpoint_url()
@@ -123,7 +138,7 @@ def get_stations_lite(**kwargs) -> json:
 
     return json.loads(response)    
 
-def get_hourly_full_station(station:str = '47423',**kwargs) -> str:
+def get_hourly_full_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
     """retrieves station hourly full information. 
     See: 
     
@@ -142,7 +157,10 @@ def get_hourly_full_station(station:str = '47423',**kwargs) -> str:
 
     response = _get_data_from_endpoint(url = url)
 
-    return response
+    if format == 'json':
+        result = _get_json_from_csv(data=response, fieldnames=HOURLY_CSV_DATA_HEADER)
+    else:
+        return response
 
 def get_hourly_obs_station(station:str = '47423',**kwargs) -> str:
     """retrieves station hourly observation information. 
@@ -271,6 +289,6 @@ def get_normals_station(station:str = '47423',**kwargs) -> str:
     return response
 
 
-response = get_hourly_full_station()
+response = get_hourly_full_station(station='47423', format='json')
 
 print(response)
