@@ -100,9 +100,9 @@ def _get_data_from_endpoint(url:str = None, **kwargs) -> str:
     else:
         return gzip.decompress(response.content)
 
-def _get_json_from_csv(data:str = None, fieldnames:tuple = None, **kwargs) -> json:
+def _get_json_from_csv(data:bytes = None, fieldnames:tuple = None, **kwargs) -> json:
     """Parses data from csv to json dict."""
-    result = {}
+    result = []
 
     content = data.decode('utf-8')
 
