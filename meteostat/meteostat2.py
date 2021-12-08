@@ -114,7 +114,25 @@ def _get_json_from_csv(data:str = None, fieldnames:tuple = None, **kwargs) -> js
     return json.dumps(result)
 
 def get_stations_full(**kwargs) -> json:
-    """retrieves station full information."""
+    """retrieves station full information.
+
+    Parameters
+    ----------
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    json
+        the requested data.
+
+    See: 
+    
+        https://dev.meteostat.net/bulk/stations.html#endpoints
+    
+    for more details"""
+
     endpoint = _get_endpoint_url()
 
     components={
@@ -128,11 +146,25 @@ def get_stations_full(**kwargs) -> json:
     return json.loads(response)
 
 def get_stations_lite(**kwargs) -> json:
-    """retrieves station lite information. See: 
+    """retrieves station lite information.
+
+    Parameters
+    ----------
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
     
-    https://dev.meteostat.net/bulk/stations.html#endpoints
+    Returns
+    -------
+    json
+        the requested data.
+
+    See: 
     
-    for details"""
+        https://dev.meteostat.net/bulk/stations.html#endpoints
+    
+    for more details"""
+
     endpoint = _get_endpoint_url()
 
     components={
@@ -146,12 +178,31 @@ def get_stations_lite(**kwargs) -> json:
     return json.loads(response)    
 
 def get_hourly_full_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
-    """retrieves station hourly full information. 
+    """retrieves station hourly full information.
+
+    Parameters
+    ----------
+    sation: str
+        The station identifier to be requested for. Default = 47423.
+    
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/hourly.html#endpoints
+        https://dev.meteostat.net/bulk/hourly.html#endpoints
     
-    for details"""
+    for more details"""    
+
     endpoint = _get_endpoint_url()
 
     components={
@@ -171,13 +222,32 @@ def get_hourly_full_station(station:str = '47423', format:str = 'csv', **kwargs)
     else:
         return response
 
-def get_hourly_obs_station(station:str = '47423',**kwargs) -> str:
-    """retrieves station hourly observation information. 
+def get_hourly_obs_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
+    """retrieves station hourly observation information.
+
+    Parameters
+    ----------
+    sation: str
+        The station identifier to be requested for. Default = 47423.
+    
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/hourly.html#endpoints
+        https://dev.meteostat.net/bulk/hourly.html#endpoints
     
-    for details"""
+    for more details"""    
+
     endpoint = _get_endpoint_url()
 
     components={
@@ -197,13 +267,32 @@ def get_hourly_obs_station(station:str = '47423',**kwargs) -> str:
     else:
         return response
 
-def get_daily_full_station(station:str = '47423',**kwargs) -> str:
+def get_daily_full_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
     """retrieves station daily full information. 
+
+    Parameters
+    ----------
+    sation: str
+        The station identifier to be requested for. Default = 47423.
+    
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/daily.html
+        https://dev.meteostat.net/bulk/daily.html
     
-    for details"""
+    for more details"""     
+
     endpoint = _get_endpoint_url()
 
     components={
@@ -223,13 +312,32 @@ def get_daily_full_station(station:str = '47423',**kwargs) -> str:
     else:
         return response
 
-def get_daily_obs_station(station:str = '47423',**kwargs) -> str:
-    """retrieves station daily observation information. 
+def get_daily_obs_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
+    """retrieves station daily observation information.
+
+    Parameters
+    ----------
+    sation: str
+        The station identifier to be requested for. Default = 47423.
+    
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/daily.html
+        https://dev.meteostat.net/bulk/daily.html
     
-    for details"""
+    for more details"""  
+
     endpoint = _get_endpoint_url()
 
     components={
@@ -249,13 +357,32 @@ def get_daily_obs_station(station:str = '47423',**kwargs) -> str:
     else:
         return response
 
-def get_monthly_full_station(station:str = '47423',**kwargs) -> str:
-    """retrieves station monthly full information. 
+def get_monthly_full_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
+    """retrieves station monthly full information.
+
+    Parameters
+    ----------
+    sation: str
+        The station identifier to be requested for. Default = 47423.
+    
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/monthly.html#endpoints
+        https://dev.meteostat.net/bulk/monthly.html#endpoints
     
-    for details"""
+    for more details"""
+
     endpoint = _get_endpoint_url()
 
     components={
@@ -275,13 +402,32 @@ def get_monthly_full_station(station:str = '47423',**kwargs) -> str:
     else:
         return response
 
-def get_monthly_obs_station(station:str = '47423',**kwargs) -> str:
-    """retrieves station monthly obs information. 
+def get_monthly_obs_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
+    """retrieves station monthly obs information.
+
+    Parameters
+    ----------
+    sation: str
+        The station identifier to be requested for. Default = 47423.
+    
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/monthly.html#endpoints
+        https://dev.meteostat.net/bulk/monthly.html#endpoints
     
-    for details"""
+    for more details"""
+
     endpoint = _get_endpoint_url()
 
     components={
@@ -302,12 +448,31 @@ def get_monthly_obs_station(station:str = '47423',**kwargs) -> str:
         return response
 
 def get_normals_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
-    """retrieves station normals information. 
+    """retrieves station normals information.
+
+    Parameters
+    ----------
+    sation: str
+        The station identifier to be requested for. Default = 47423.
+    
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/normals.html#endpoint
+        https://dev.meteostat.net/bulk/normals.html#endpoint
     
-    for details"""
+    for more details"""
+
     endpoint = _get_endpoint_url()
 
     components={
@@ -330,11 +495,27 @@ def get_normals_station(station:str = '47423', format:str = 'csv', **kwargs) -> 
 def get_hourly_full_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station hourly full information for all stations
     listed in get_stations_full().
+
+    Parameters
+    ----------
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/hourly.html#endpoints
+        https://dev.meteostat.net/bulk/hourly.html#endpoints
     
-    for details"""
+    for more details"""
+
     stations = []
     data = []
 
@@ -358,11 +539,27 @@ def get_hourly_full_all_stations(format:str = 'csv',**kwargs) -> str:
 def get_hourly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station hourly observation information for all stations
     listed in get_stations_full().
+
+    Parameters
+    ----------
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/hourly.html#endpoints
+        https://dev.meteostat.net/bulk/hourly.html#endpoints
     
-    for details"""
+    for more details"""
+
     stations = []
     data = []
 
@@ -386,11 +583,27 @@ def get_hourly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
 def get_daily_full_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station daily full information for all stations
     listed in get_stations_full().
+
+    Parameters
+    ----------
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/hourly.html#endpoints
+        https://dev.meteostat.net/bulk/daily.html
     
-    for details"""
+    for more details"""
+
     stations = []
     data = []
 
@@ -414,11 +627,27 @@ def get_daily_full_all_stations(format:str = 'csv',**kwargs) -> str:
 def get_daily_obs_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station daily obs information for all stations
     listed in get_stations_full().
+
+    Parameters
+    ----------
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/hourly.html#endpoints
+        https://dev.meteostat.net/bulk/daily.html
     
-    for details"""
+    for more details"""
+
     stations = []
     data = []
 
@@ -442,11 +671,27 @@ def get_daily_obs_all_stations(format:str = 'csv',**kwargs) -> str:
 def get_monthly_full_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station monthly full information for all stations
     listed in get_stations_full().
+
+    Parameters
+    ----------
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/hourly.html#endpoints
+        https://dev.meteostat.net/bulk/monthly.html#endpoints
     
-    for details"""
+    for more details"""
+
     stations = []
     data = []
 
@@ -470,11 +715,27 @@ def get_monthly_full_all_stations(format:str = 'csv',**kwargs) -> str:
 def get_monthly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station daily observation information for all stations
     listed in get_stations_full().
+
+    Parameters
+    ----------
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/hourly.html#endpoints
+        https://dev.meteostat.net/bulk/monthly.html#endpoints
     
-    for details"""
+    for more details"""
+
     stations = []
     data = []
 
@@ -498,11 +759,27 @@ def get_monthly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
 def get_normals_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station normals information for all stations
     listed in get_stations_full().
+
+    Parameters
+    ----------
+    format: str
+        Controls the output format. Default csv, the other option is json.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    str (json or csv)
+        the requested data, always dep
+
     See: 
     
-    https://dev.meteostat.net/bulk/hourly.html#endpoints
+        https://dev.meteostat.net/bulk/normals.html#endpoint
     
-    for details"""
+    for more details"""
+
     stations = []
     data = []
 
@@ -523,14 +800,45 @@ def get_normals_all_stations(format:str = 'csv',**kwargs) -> str:
     else:
         return response
 
-def get_nearby_stations(x_rapidapi_key:str = None, lat:float = None, lon:float = None, limit:int = 10, radius:int = 100000,**kwargs) -> str:
+def get_nearby_stations(x_rapidapi_key:str = None, lat:float = None, lon:float = None, limit:int = 10, radius:int = 100000,**kwargs) -> json:
     """retrieves nearby stations by geolocation.
+
+    Parameters
+    ----------
+    x_rapidapi_key: str
+        Sign in to get your key. Default None. See: 
+
+            https://rapidapi.com/meteostat/api/meteostat/pricing
+
+        for more information.
+    
+    lat: float
+        The latitude of the location. Default None.
+
+    long: float
+        The longitude of the location. Default None.
+    
+    limit: int
+        The longitude of the location. Default 10 units.
+
+    radius: int
+        The radius of the query in meters. Default 100000 meters.
+
+    **kwargs :
+        Optional arguments that ``requests.get()`` takes. For example,
+        `proxies`, `cert` and `verify`.
+    
+    Returns
+    -------
+    json
+        the requested data.
+
     See: 
     
-    https://dev.meteostat.net/api/stations/nearby.html
+        https://dev.meteostat.net/api/stations/nearby.html
     
-    for details"""
-    
+    for more details"""
+
     url = 'https://meteostat.p.rapidapi.com/stations/nearby'
 
     querystring = {
