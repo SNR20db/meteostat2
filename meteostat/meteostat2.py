@@ -102,13 +102,16 @@ def _get_data_from_endpoint(url:str = None, **kwargs) -> str:
 
 def _get_json_from_csv(data:str = None, fieldnames:tuple = None, **kwargs) -> json:
     """Parses data from csv to json dict."""
-    
-    result = csv.DictReader(data.decode('utf-8'), fieldnames=fieldnames, restkey='Excess', restval=None)
+    result = {}
 
-    for row in result:
-        print(row)
+    content = data.decode('utf-8')
 
-    return result
+    reader = csv.DictReader(content.splitlines(), fieldnames=fieldnames, delimiter=',', lineterminator='\r\n')
+
+    for row in reader:
+        result.append(row)
+
+    return json.dumps(result)
 
 def get_stations_full(**kwargs) -> json:
     """retrieves station full information."""
@@ -162,9 +165,9 @@ def get_hourly_full_station(station:str = '47423', format:str = 'csv', **kwargs)
     response = _get_data_from_endpoint(url = url)
 
     if format == 'json':
-        result = _get_json_from_csv(data=response, fieldnames=HOURLY_CSV_DATA_HEADER)
+        data = _get_json_from_csv(data=response, fieldnames=HOURLY_CSV_DATA_HEADER)
 
-        return result
+        return data
     else:
         return response
 
@@ -187,7 +190,12 @@ def get_hourly_obs_station(station:str = '47423',**kwargs) -> str:
 
     response = _get_data_from_endpoint(url = url)
 
-    return response
+    if format == 'json':
+        data = _get_json_from_csv(data=response, fieldnames=HOURLY_CSV_DATA_HEADER)
+
+        return data
+    else:
+        return response
 
 def get_daily_full_station(station:str = '47423',**kwargs) -> str:
     """retrieves station daily full information. 
@@ -208,7 +216,12 @@ def get_daily_full_station(station:str = '47423',**kwargs) -> str:
 
     response = _get_data_from_endpoint(url = url)
 
-    return response
+    if format == 'json':
+        data = _get_json_from_csv(data=response, fieldnames=DAILY_CSV_DATA_HEADER)
+
+        return data
+    else:
+        return response
 
 def get_daily_obs_station(station:str = '47423',**kwargs) -> str:
     """retrieves station daily observation information. 
@@ -229,7 +242,12 @@ def get_daily_obs_station(station:str = '47423',**kwargs) -> str:
 
     response = _get_data_from_endpoint(url = url)
 
-    return response
+    if format == 'json':
+        data = _get_json_from_csv(data=response, fieldnames=DAILY_CSV_DATA_HEADER)
+
+        return data
+    else:
+        return response
 
 def get_monthly_full_station(station:str = '47423',**kwargs) -> str:
     """retrieves station monthly full information. 
@@ -250,7 +268,12 @@ def get_monthly_full_station(station:str = '47423',**kwargs) -> str:
 
     response = _get_data_from_endpoint(url = url)
 
-    return response
+    if format == 'json':
+        data = _get_json_from_csv(data=response, fieldnames=MONTHLY_CSV_DATA_HEADER)
+
+        return data
+    else:
+        return response
 
 def get_monthly_obs_station(station:str = '47423',**kwargs) -> str:
     """retrieves station monthly obs information. 
@@ -271,7 +294,12 @@ def get_monthly_obs_station(station:str = '47423',**kwargs) -> str:
 
     response = _get_data_from_endpoint(url = url)
 
-    return response
+    if format == 'json':
+        data = _get_json_from_csv(data=response, fieldnames=MONTHLY_CSV_DATA_HEADER)
+
+        return data
+    else:
+        return response
 
 def get_normals_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
     """retrieves station normals information. 
@@ -292,7 +320,12 @@ def get_normals_station(station:str = '47423', format:str = 'csv', **kwargs) -> 
 
     response = _get_data_from_endpoint(url = url)
 
-    return response
+    if format == 'json':
+        data = _get_json_from_csv(data=response, fieldnames=NORMALS_CSV_DATA_HEADER)
+
+        return data
+    else:
+        return response
 
 def get_hourly_full_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station hourly full information for all stations
@@ -315,7 +348,12 @@ def get_hourly_full_all_stations(format:str = 'csv',**kwargs) -> str:
 
         data.append(query)
     
-    return data
+    if format == 'json':
+        result = _get_json_from_csv(data=data, fieldnames=HOURLY_CSV_DATA_HEADER)
+
+        return result
+    else:
+        return response
 
 def get_hourly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station hourly observation information for all stations
@@ -338,7 +376,12 @@ def get_hourly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
 
         data.append(query)
     
-    return data
+    if format == 'json':
+        result = _get_json_from_csv(data=data, fieldnames=HOURLY_CSV_DATA_HEADER)
+
+        return result
+    else:
+        return response
 
 def get_daily_full_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station daily full information for all stations
@@ -361,7 +404,12 @@ def get_daily_full_all_stations(format:str = 'csv',**kwargs) -> str:
 
         data.append(query)
     
-    return data
+    if format == 'json':
+        result = _get_json_from_csv(data=data, fieldnames=DAILY_CSV_DATA_HEADER)
+
+        return result
+    else:
+        return response
 
 def get_daily_obs_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station daily obs information for all stations
@@ -384,7 +432,12 @@ def get_daily_obs_all_stations(format:str = 'csv',**kwargs) -> str:
 
         data.append(query)
     
-    return data   
+    if format == 'json':
+        result = _get_json_from_csv(data=data, fieldnames=DAILY_CSV_DATA_HEADER)
+
+        return result
+    else:
+        return response
 
 def get_monthly_full_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station monthly full information for all stations
@@ -407,7 +460,12 @@ def get_monthly_full_all_stations(format:str = 'csv',**kwargs) -> str:
 
         data.append(query)
     
-    return data      
+    if format == 'json':
+        result = _get_json_from_csv(data=data, fieldnames=MONTHLY_CSV_DATA_HEADER)
+
+        return result
+    else:
+        return response     
 
 def get_monthly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station daily observation information for all stations
@@ -430,7 +488,12 @@ def get_monthly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
 
         data.append(query)
     
-    return data     
+    if format == 'json':
+        result = _get_json_from_csv(data=data, fieldnames=MONTHLY_CSV_DATA_HEADER)
+
+        return result
+    else:
+        return response   
 
 def get_normals_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station normals information for all stations
@@ -453,7 +516,12 @@ def get_normals_all_stations(format:str = 'csv',**kwargs) -> str:
 
         data.append(query)
     
-    return data
+    if format == 'json':
+        result = _get_json_from_csv(data=data, fieldnames=NORMALS_CSV_DATA_HEADER)
+
+        return result
+    else:
+        return response
 
 def get_nearby_stations(x_rapidapi_key:str = None, lat:float = None, lon:float = None, limit:int = 10, radius:int = 100000,**kwargs) -> str:
     """retrieves nearby stations by geolocation.
