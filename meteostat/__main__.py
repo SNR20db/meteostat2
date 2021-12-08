@@ -23,3 +23,18 @@
 
 """Meteostat API client for Python"""
 
+import argparse
+import sys
+
+import json
+import csv
+
+import meteostat
+
+AVAILABLE_CMDS = ['data']
+
+def main():
+    pass
+
+if __name__ == '__main__':
+    main()
