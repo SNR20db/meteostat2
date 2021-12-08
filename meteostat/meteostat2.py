@@ -92,8 +92,9 @@ def _get_data_from_endpoint(url:str = None, **kwargs) -> str:
 
         response.raise_for_status()
     except HTTPError as http_err:
-        print('Invalid request. Code: {}, reason: {}, text: {}'.format
-        (response.status_code, response.reason, response.text)
+        print('Invalid request. Code: {}, reason: {}, text: {}'.format(
+            response.status_code, response.reason, response.text
+            )
         )
 
         pass

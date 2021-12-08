@@ -1,5 +1,5 @@
 # meteostat2
-meteostat2 is an alternative API for python. No manipulation of data occurs, simple and intuitive. Feast yourself on data already prepared to be consumed.
+meteostat2 is an alternative API for python. No manipulation of data occurs, simple and intuitive. Feast yourself on data already prepared to be immideately consumed.
 
 # Set up.
 Using Pypi.

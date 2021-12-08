@@ -1,4 +1,3 @@
-
 from setuptools import setup
 
 from os import name, path
