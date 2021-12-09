@@ -40,10 +40,10 @@ from requests.exceptions import HTTPError
 
 ENDPOINT = '//bulk.meteostat.net/v2/'
 
-HOURLY_CSV_DATA_HEADER = ('date', 'hour', 'temp', 'dwpt', 'rhum', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'coco')
-DAILY_CSV_DATA_HEADER = ('date', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
-MONTHLY_CSV_DATA_HEADER = ('year', 'month', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
-NORMALS_CSV_DATA_HEADER = ('star', 'end', 'month', 'tmin', 'tmax', 'prcp', 'wspd', 'pres', 'tsun')
+HOURLY_CSV_DATA_HEADER = ('id', 'date', 'hour', 'temp', 'dwpt', 'rhum', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'coco')
+DAILY_CSV_DATA_HEADER = ('id', 'date', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
+MONTHLY_CSV_DATA_HEADER = ('id', 'year', 'month', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
+NORMALS_CSV_DATA_HEADER = ('id', 'star', 'end', 'month', 'tmin', 'tmax', 'prcp', 'wspd', 'pres', 'tsun')
 
 class OptionsManager(object):
     """Class for option managment"""
@@ -85,8 +85,10 @@ def _get_endpoint_url() -> str:
 
     return "{http}{endpoint}".format(**components)
 
-def _get_data_from_endpoint(url:str = None, **kwargs) -> str:
+def _get_data_from_endpoint(url:str = None, isstation:bool = True, station:str = None, **kwargs) -> str:
     """Gets data from the stablished endpoint."""
+    result = []
+    
     try:
         response = requests.get(url)
 
@@ -99,15 +101,25 @@ def _get_data_from_endpoint(url:str = None, **kwargs) -> str:
 
         pass
     else:
-        return gzip.decompress(response.content)
+        data = gzip.decompress(response.content)
 
-def _get_json_from_csv(data:bytes = None, fieldnames:tuple = None, **kwargs) -> json:
+        my_string = data.decode('utf-8')
+
+        if isstation != True:
+            for line in my_string.splitlines():
+                result.append(
+                    '{},{}'.format(station,line)
+                    )
+            
+            return result
+        
+        return my_string
+
+def _get_json_from_csv(data:str = None, fieldnames:tuple = None, **kwargs) -> json:
     """Parses data from csv to json dict."""
     result = []
 
-    content = data.decode('utf-8')
-
-    reader = csv.DictReader(content.splitlines(), fieldnames=fieldnames, delimiter=',', lineterminator='\r\n')
+    reader = csv.DictReader(data, fieldnames=fieldnames, delimiter=',', lineterminator='\r\n')
 
     for row in reader:
         result.append(row)
@@ -142,7 +154,7 @@ def get_stations_full(**kwargs) -> json:
 
     url = "{}{action}".format(endpoint, **components)
 
-    response = _get_data_from_endpoint(url = url)
+    response = _get_data_from_endpoint(url=url, isstation=False, station=None)
 
     return json.loads(response)
 
@@ -174,7 +186,7 @@ def get_stations_lite(**kwargs) -> json:
 
     url = "{}{action}".format(endpoint, **components)
 
-    response = _get_data_from_endpoint(url = url)
+    response = _get_data_from_endpoint(url=url, isstation=False, station=None)
 
     return json.loads(response)    
 
@@ -214,14 +226,16 @@ def get_hourly_full_station(station:str = '47423', format:str = 'csv', **kwargs)
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = _get_data_from_endpoint(url = url)
+    response = _get_data_from_endpoint(url=url, station=station)
 
     if format == 'json':
         data = _get_json_from_csv(data=response, fieldnames=HOURLY_CSV_DATA_HEADER)
 
         return data
     else:
-        return response
+        header = ",".join(HOURLY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response
 
 def get_hourly_obs_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
     """retrieves station hourly observation information.
@@ -259,14 +273,16 @@ def get_hourly_obs_station(station:str = '47423', format:str = 'csv', **kwargs) 
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = _get_data_from_endpoint(url = url)
+    response = _get_data_from_endpoint(url=url, station=station)
 
     if format == 'json':
         data = _get_json_from_csv(data=response, fieldnames=HOURLY_CSV_DATA_HEADER)
 
         return data
     else:
-        return response
+        header = ",".join(HOURLY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response
 
 def get_daily_full_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
     """retrieves station daily full information. 
@@ -304,14 +320,16 @@ def get_daily_full_station(station:str = '47423', format:str = 'csv', **kwargs) 
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = _get_data_from_endpoint(url = url)
+    response = _get_data_from_endpoint(url=url, station=station)
 
     if format == 'json':
         data = _get_json_from_csv(data=response, fieldnames=DAILY_CSV_DATA_HEADER)
 
         return data
     else:
-        return response
+        header = ",".join(DAILY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response
 
 def get_daily_obs_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
     """retrieves station daily observation information.
@@ -349,14 +367,16 @@ def get_daily_obs_station(station:str = '47423', format:str = 'csv', **kwargs) -
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = _get_data_from_endpoint(url = url)
+    response = _get_data_from_endpoint(url=url, station=station)
 
     if format == 'json':
         data = _get_json_from_csv(data=response, fieldnames=DAILY_CSV_DATA_HEADER)
 
         return data
     else:
-        return response
+        header = ",".join(DAILY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response
 
 def get_monthly_full_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
     """retrieves station monthly full information.
@@ -394,14 +414,16 @@ def get_monthly_full_station(station:str = '47423', format:str = 'csv', **kwargs
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = _get_data_from_endpoint(url = url)
+    response = _get_data_from_endpoint(url=url, station=station)
 
     if format == 'json':
         data = _get_json_from_csv(data=response, fieldnames=MONTHLY_CSV_DATA_HEADER)
 
         return data
     else:
-        return response
+        header = ",".join(MONTHLY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response
 
 def get_monthly_obs_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
     """retrieves station monthly obs information.
@@ -439,14 +461,16 @@ def get_monthly_obs_station(station:str = '47423', format:str = 'csv', **kwargs)
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = _get_data_from_endpoint(url = url)
+    response = _get_data_from_endpoint(url=url, station=station)
 
     if format == 'json':
         data = _get_json_from_csv(data=response, fieldnames=MONTHLY_CSV_DATA_HEADER)
 
         return data
     else:
-        return response
+        header = ",".join(MONTHLY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response
 
 def get_normals_station(station:str = '47423', format:str = 'csv', **kwargs) -> str:
     """retrieves station normals information.
@@ -484,14 +508,16 @@ def get_normals_station(station:str = '47423', format:str = 'csv', **kwargs) -> 
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
 
-    response = _get_data_from_endpoint(url = url)
+    response = _get_data_from_endpoint(url=url, station=station)
 
     if format == 'json':
         data = _get_json_from_csv(data=response, fieldnames=NORMALS_CSV_DATA_HEADER)
 
         return data
     else:
-        return response
+        header = ",".join(NORMALS_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response
 
 def get_hourly_full_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station hourly full information for all stations
@@ -535,7 +561,9 @@ def get_hourly_full_all_stations(format:str = 'csv',**kwargs) -> str:
 
         return result
     else:
-        return response
+        header = ",".join(HOURLY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response
 
 def get_hourly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station hourly observation information for all stations
@@ -579,7 +607,9 @@ def get_hourly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
 
         return result
     else:
-        return response
+        header = ",".join(HOURLY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response
 
 def get_daily_full_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station daily full information for all stations
@@ -623,7 +653,9 @@ def get_daily_full_all_stations(format:str = 'csv',**kwargs) -> str:
 
         return result
     else:
-        return response
+        header = ",".join(DAILY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response
 
 def get_daily_obs_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station daily obs information for all stations
@@ -667,7 +699,9 @@ def get_daily_obs_all_stations(format:str = 'csv',**kwargs) -> str:
 
         return result
     else:
-        return response
+        header = ",".join(DAILY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response
 
 def get_monthly_full_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station monthly full information for all stations
@@ -711,7 +745,9 @@ def get_monthly_full_all_stations(format:str = 'csv',**kwargs) -> str:
 
         return result
     else:
-        return response     
+        header = ",".join(MONTHLY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response   
 
 def get_monthly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station daily observation information for all stations
@@ -755,7 +791,9 @@ def get_monthly_obs_all_stations(format:str = 'csv',**kwargs) -> str:
 
         return result
     else:
-        return response   
+        header = ",".join(MONTHLY_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response  
 
 def get_normals_all_stations(format:str = 'csv',**kwargs) -> str:
     """retrieves station normals information for all stations
@@ -799,7 +837,9 @@ def get_normals_all_stations(format:str = 'csv',**kwargs) -> str:
 
         return result
     else:
-        return response
+        header = ",".join(NORMALS_CSV_DATA_HEADER)
+
+        return header + '\r\n' + response 
 
 def get_nearby_stations(x_rapidapi_key:str = None, lat:float = None, lon:float = None, limit:int = 10, radius:int = 100000,**kwargs) -> json:
     """retrieves nearby stations by geolocation.
