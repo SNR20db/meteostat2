@@ -34,7 +34,29 @@ import meteostat
 AVAILABLE_CMDS = ['data']
 
 def main():
-    pass
+    
+    parser = argparse.ArgumentParser(
+        prog=sys.argv[0],
+        description="""
+            meteostat alternative API for Python.
+
+            1. Get a list of stations.
+
+            2. Get data for station.
+
+            3. Or get data for all the stations.
+
+            *** Use the geo-location method, to localize nearby stations.
+        """,
+        epilog="""See:
+
+            https://dev.meteostat.net/bulk/
+
+            for more information
+        """,
+        argument_default=None )
+
+        
 
 if __name__ == '__main__':
     main()
