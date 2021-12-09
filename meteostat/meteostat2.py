@@ -38,12 +38,14 @@ import gzip
 import requests
 from requests.exceptions import HTTPError
 
+import time
+
 ENDPOINT = '//bulk.meteostat.net/v2/'
 
-HOURLY_CSV_DATA_HEADER = ('id', 'date', 'hour', 'temp', 'dwpt', 'rhum', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'coco')
-DAILY_CSV_DATA_HEADER = ('id', 'date', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
-MONTHLY_CSV_DATA_HEADER = ('id', 'year', 'month', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
-NORMALS_CSV_DATA_HEADER = ('id', 'star', 'end', 'month', 'tmin', 'tmax', 'prcp', 'wspd', 'pres', 'tsun')
+HOURLY_CSV_DATA_HEADER = ('date', 'hour', 'temp', 'dwpt', 'rhum', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'coco','id')
+DAILY_CSV_DATA_HEADER = ('date', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'id')
+MONTHLY_CSV_DATA_HEADER = ('year', 'month', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'id')
+NORMALS_CSV_DATA_HEADER = ('star', 'end', 'month', 'tmin', 'tmax', 'prcp', 'wspd', 'pres', 'tsun', 'id')
 
 class OptionsManager(object):
     """Class for option managment"""
@@ -87,8 +89,7 @@ def _get_endpoint_url() -> str:
 
 def _get_data_from_endpoint(url:str = None, isstation:bool = True, station:str = None, **kwargs) -> str:
     """Gets data from the stablished endpoint."""
-    result = []
-    
+
     try:
         response = requests.get(url)
 
@@ -105,24 +106,27 @@ def _get_data_from_endpoint(url:str = None, isstation:bool = True, station:str =
 
         my_string = data.decode('utf-8')
 
-        if isstation != True:
-            for line in my_string.splitlines():
-                result.append(
-                    '{},{}'.format(station,line)
-                    )
+        if isstation == True:
             
-            return result
-        
+            old = '\r\n'
+            new = ',{}\r\n'.format(station)
+
+            res = my_string.replace( old , new )  
+
+            return res
+
         return my_string
 
-def _get_json_from_csv(data:str = None, fieldnames:tuple = None, **kwargs) -> json:
+def _get_json_from_csv(data:str = None, fieldnames:tuple = None, **kwargs) -> str:
     """Parses data from csv to json dict."""
     result = []
 
-    reader = csv.DictReader(data, fieldnames=fieldnames, delimiter=',', lineterminator='\r\n')
+    reader = csv.DictReader(data.splitlines(), fieldnames=fieldnames, delimiter=',', lineterminator='\r\n')
 
     for row in reader:
         result.append(row)
+
+    #return result
 
     return json.dumps(result)
 
@@ -896,3 +900,30 @@ def get_nearby_stations(x_rapidapi_key:str = None, lat:float = None, lon:float =
     response = requests.get(url = url, headers = headers, params = querystring)
 
     return json.loads(response.text)
+
+import pandas as pd
+from io import StringIO as io
+
+ini = time.perf_counter()
+
+response = get_hourly_full_station(format='json')
+
+fini = time.perf_counter()
+
+print(response)
+
+print( 'Duration: {} ', fini - ini ) 
+
+#print(response)
+
+#df = pd.DataFrame(response)
+
+#df = pd.DataFrame(json.loads(response))
+
+#print(df)
+
+#testdata = io(response)
+
+#df = pd.read_csv(testdata, sep=',')
+
+#print(df)

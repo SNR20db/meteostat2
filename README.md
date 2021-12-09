@@ -1,5 +1,5 @@
 # meteostat2
-meteostat2 is an alternative API for python. No manipulation of data occurs, simple and intuitive. Feast yourself on data already prepared to be immideately consumed.
+**meteostat2** is an alternative API for Python. No manipulation of data occurs, simple and intuitive. Feast yourself on data already prepared to be immideately consumed.
 
 # Set up.
 Using Pypi.
@@ -89,9 +89,8 @@ See:
 
     https://dev.meteostat.net/bulk/
 
-    With 500 free - requests per month[^*].
-
-    [^*]: Will apply only for **geo-location**.  
+With 500 free - requests per month[^*].
+[^*]: Will apply only for **geo-location**.  
 
     https://rapidapi.com/meteostat/api/meteostat/pricing
 
