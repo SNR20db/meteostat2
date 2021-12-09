@@ -6,5 +6,5 @@ import meteostat
 
 import pytest
 
-TEST_ENV = 'test_env'
+
 

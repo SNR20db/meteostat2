@@ -18,10 +18,10 @@ setup(
     versio = __version__,
     description = 'Meteostat alternative API for python',
     long_description = long_description,
-    url = 'https://dev.meteostat.net/',
+    url = 'https://github.com/SNR20db/meteostat2',
     license = 'MIT',
     Classifiers = [
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'License :: MIT License',
         'Programming Language :: Python :: 3.8',
