@@ -153,3 +153,115 @@ def test_get_nearby_stations():
 
     else:
         assert True
+
+def test_get_hourly_full_all_stations():
+    try:
+        data = meteostat.get_hourly_full_all_stations ( format = 'csv' )
+
+        df = pd.read_csv( io( data ), sep = ',' )
+
+        data = meteostat.get_hourly_full_all_stations( format = 'json' )
+
+        df = pd.DataFrame(data)
+    
+    except:
+        assert False
+
+    else:
+        assert True
+
+def test_get_hourly_obs_all_stations():
+    try:
+        data = meteostat.get_hourly_obs_all_stations ( format = 'csv' )
+
+        df = pd.read_csv( io( data ), sep = ',' )
+
+        data = meteostat.get_hourly_obs_all_stations( format = 'json' )
+
+        df = pd.DataFrame(data)
+    
+    except:
+        assert False
+
+    else:
+        assert True
+
+def test_get_daily_full_all_stations():
+    try:
+        data = meteostat.get_daily_full_all_stations ( format = 'csv' )
+
+        df = pd.read_csv( io( data ), sep = ',' )
+
+        data = meteostat.get_daily_full_all_stations( format = 'json' )
+
+        df = pd.DataFrame(data)
+    
+    except:
+        assert False
+
+    else:
+        assert True
+
+def test_get_daily_obs_all_stations():
+    try:
+        data = meteostat.get_daily_obs_all_stations ( format = 'csv' )
+
+        df = pd.read_csv( io( data ), sep = ',' )
+
+        data = meteostat.get_daily_obs_all_stations( format = 'json' )
+
+        df = pd.DataFrame(data)
+    
+    except:
+        assert False
+
+    else:
+        assert True
+
+def test_get_monthly_full_all_stations():
+    try:
+        data = meteostat.get_monthly_full_all_stations ( format = 'csv' )
+
+        df = pd.read_csv( io( data ), sep = ',' )
+
+        data = meteostat.get_monthly_full_all_stations( format = 'json' )
+
+        df = pd.DataFrame(data)
+    
+    except:
+        assert False
+
+    else:
+        assert True
+
+def test_get_monthly_obs_all_stations():
+    try:
+        data = meteostat.get_monthly_obs_all_stations ( format = 'csv' )
+
+        df = pd.read_csv( io( data ), sep = ',' )
+
+        data = meteostat.get_monthly_obs_all_stations( format = 'json' )
+
+        df = pd.DataFrame(data)
+    
+    except:
+        assert False
+
+    else:
+        assert True
+
+def test_get_normals_all_stations():
+    try:
+        data = meteostat.get_normals_all_stations ( format = 'csv' )
+
+        df = pd.read_csv( io( data ), sep = ',' )
+
+        data = meteostat.get_normals_all_stations( format = 'json' )
+
+        df = pd.DataFrame(data)
+    
+    except:
+        assert False
+
+    else:
+        assert True

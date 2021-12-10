@@ -22,7 +22,10 @@ setup(
     license = 'MIT',
     Classifiers = [
         'Development Status :: 3 - Alpha',
-        'Intended Audience :: Developers',
+        'Intended Audience :: Developer',        
+        'Intended Audience :: Education',
+        'Intended Audience :: End Users/Desktop',
+        'Intended Audience :: Science/Research',
         'License :: MIT License',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',

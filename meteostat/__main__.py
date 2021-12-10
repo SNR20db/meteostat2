@@ -29,7 +29,7 @@ import sys
 import json
 import csv
 
-import meteostat
+import meteostat2
 
 AVAILABLE_CMDS = ['data']
 
@@ -50,13 +50,17 @@ def main():
         """,
         epilog="""See:
 
+            https://github.com/SNR20db/meteostat2
+
+            or
+
             https://dev.meteostat.net/bulk/
 
             for more information
         """,
-        argument_default=None )
+        argument_default=None)
+
 
         
-
 if __name__ == '__main__':
     main()

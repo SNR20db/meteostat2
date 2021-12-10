@@ -1,9 +1,14 @@
 
 /meteostat/__pycache__
 
-/tests/__pycache__
-
+# distribution
 /dist
 
 /meteostat2.egg-info
 
+.__pycache__
+
+#test
+.pytest_cache
+
+/tests/__pycache__
