@@ -42,10 +42,10 @@ import time
 
 ENDPOINT = '//bulk.meteostat.net/v2/'
 
-HOURLY_CSV_DATA_HEADER = ('date', 'hour', 'temp', 'dwpt', 'rhum', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'coco','id')
-DAILY_CSV_DATA_HEADER = ('date', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'id')
-MONTHLY_CSV_DATA_HEADER = ('year', 'month', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'id')
-NORMALS_CSV_DATA_HEADER = ('star', 'end', 'month', 'tmin', 'tmax', 'prcp', 'wspd', 'pres', 'tsun', 'id')
+HOURLY_CSV_DATA_HEADER = ('id', 'date', 'hour', 'temp', 'dwpt', 'rhum', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun', 'coco')
+DAILY_CSV_DATA_HEADER = ('id', 'date', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
+MONTHLY_CSV_DATA_HEADER = ('id', 'year', 'month', 'tavg', 'tmin', 'tmax', 'prcp', 'snow', 'wdir', 'wspd', 'wpgt', 'pres', 'tsun')
+NORMALS_CSV_DATA_HEADER = ('id', 'start', 'end', 'month', 'tmin', 'tmax', 'prcp', 'wspd', 'pres', 'tsun')
 
 class OptionsManager(object):
     """Class for option managment"""
@@ -94,41 +94,37 @@ def _get_data_from_endpoint(url:str = None, isstation:bool = True, station:str =
         response = requests.get(url)
 
         response.raise_for_status()
+    
     except HTTPError as http_err:
-        print('Invalid request. Code: {}, reason: {}, text: {}'.format(
-            response.status_code, response.reason, response.text
+        print('Invalid request for stations {}. Retrieved: {}'.format(
+            station, response.text
             )
         )
 
         pass
+
     else:
         data = gzip.decompress(response.content)
 
         my_string = data.decode('utf-8')
 
         if isstation == True:
-            
-            old = '\r\n'
-            new = ',{}\r\n'.format(station)
 
-            res = my_string.replace( old , new )  
+            result = [ '{},{}'.format( station, row ) for row in my_string.splitlines() ]
 
-            return res
+            return "\r\n".join( result )
 
         return my_string
 
-def _get_json_from_csv(data:str = None, fieldnames:tuple = None, **kwargs) -> str:
+def _get_json_from_csv(data:str = None, fieldnames:tuple = None, **kwargs) -> list:
     """Parses data from csv to json dict."""
-    result = []
 
     reader = csv.DictReader(data.splitlines(), fieldnames=fieldnames, delimiter=',', lineterminator='\r\n')
 
-    for row in reader:
-        result.append(row)
+    result = [ row for row in reader ]
 
-    #return result
+    return result
 
-    return json.dumps(result)
 
 def get_stations_full(**kwargs) -> json:
     """retrieves station full information.
@@ -505,12 +501,14 @@ def get_normals_station(station:str = '47423', format:str = 'csv', **kwargs) -> 
     endpoint = _get_endpoint_url()
 
     components={
-        "action": "monthly/obs/",
+        "action": "normals/",
         "station": station,
         "extension": ".csv.gz"
     }
 
     url = "{}{action}{station}{extension}".format(endpoint, **components)
+
+    print( station )
 
     response = _get_data_from_endpoint(url=url, station=station)
 
@@ -823,21 +821,22 @@ def get_normals_all_stations(format:str = 'csv',**kwargs) -> str:
     
     for more details"""
 
-    stations = []
-    data = []
-
     response = get_stations_full()
 
-    for line in response:
-        stations.append(line['id'])
+    stations = [ line['id'] for line in response ]
 
-    for id in stations:
-        query = get_normals_station(station = id, format = format)
+    result = [ get_normals_station( station = id, format = format ) for id in stations ]
 
-        data.append(query)
+    #data = []
+
+    #for id in stations:
+    #    query = get_normals_station(station = id, format = format)
+
+    #    data.append(query)
     
     if format == 'json':
-        result = _get_json_from_csv(data=data, fieldnames=NORMALS_CSV_DATA_HEADER)
+        result = _get_json_from_csv(data=result, fieldnames=NORMALS_CSV_DATA_HEADER)
+        #result = _get_json_from_csv(data=data, fieldnames=NORMALS_CSV_DATA_HEADER)
 
         return result
     else:
@@ -901,22 +900,26 @@ def get_nearby_stations(x_rapidapi_key:str = None, lat:float = None, lon:float =
 
     return json.loads(response.text)
 
+
+
 import pandas as pd
 from io import StringIO as io
 
 ini = time.perf_counter()
 
-response = get_hourly_full_station(format='json')
+response = get_normals_all_stations( )
+
+#response = get_stations_full()
 
 fini = time.perf_counter()
-
-print(response)
 
 print( 'Duration: {} ', fini - ini ) 
 
 #print(response)
 
 #df = pd.DataFrame(response)
+
+#print(df)
 
 #df = pd.DataFrame(json.loads(response))
 
