@@ -889,31 +889,41 @@ def get_nearby_stations(x_rapidapi_key:str = None, lat:float = None, lon:float =
         "lat" : lat,
         "lon" : lon,
         "limit" : limit,
-        "radius" : radius} #{"lat":"51.5085","lon":"-0.1257"}
+        "radius" : radius
+    } 
 
     headers = {
         'x-rapidapi-host': "meteostat.p.rapidapi.com",
-        'x-rapidapi-key':  x_rapidapi_key#"d351b58670mshcce819d6a8a3034p1c54bdjsn88f7a12fa377"        
+        'x-rapidapi-key':  x_rapidapi_key       
     }
 
-    response = requests.get(url = url, headers = headers, params = querystring)
+    response = requests.get ( url = url, headers = headers, params = querystring )
 
-    return json.loads(response.text)
+    return json.loads ( response.text )
 
+#import pandas as pd
 
+#data = get_nearby_stations ( 
+#            x_rapidapi_key='d351b58670mshcce819d6a8a3034p1c54bdjsn88f7a12fa377',
+#            lat=51.5085,
+#            lon=-0.1257
+#        )
 
-import pandas as pd
-from io import StringIO as io
+#df = pd.DataFrame.from_dict (data=data)
 
-ini = time.perf_counter()
+#print ( df )
 
-response = get_normals_all_stations( )
+#from io import StringIO as io
+
+#ini = time.perf_counter()
+
+#response = get_normals_all_stations( )
 
 #response = get_stations_full()
 
-fini = time.perf_counter()
+#fini = time.perf_counter()
 
-print( 'Duration: {} ', fini - ini ) 
+#print( 'Duration: {} ', fini - ini ) 
 
 #print(response)
 

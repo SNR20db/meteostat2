@@ -38,6 +38,6 @@ setup(
     },
     py_modules = [ 'meteostat.meteostat2' , 'meteostat.__main__' ],
     test_require = [
-        'pytest'
+        'pandas'
     ]
 )
